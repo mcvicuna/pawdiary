@@ -1,0 +1,22 @@
+<div class="nav-bar">
+  <div class="nav-bar-contents">
+    <div class="logo">
+      <img src="/images/pawdiary.png" style="max-height: 32px; max-width: 32px;"/>
+    </div>
+    <div class="title">
+      <a href="/">
+        PAW Diary
+      </a>
+    </div>
+    <div class="user-info">
+        <div class="user" ng-show="user.user">
+        <img ng-src="{{user.user.profile.picture}}" style="max-height: 32px; max-width: 32px;"/>
+      </div>
+      <div class="login" ng-show="!user.user">
+        <a href="/auth/facebook?redirect=%2F%23%2F">
+          <img src="/images/LKMP7.png">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

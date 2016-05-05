@@ -20,11 +20,18 @@
     "express-session": "~1.13.0",
     "http-status": "0.1.8",
     "passport": "~0.2.2",
-    "passport-facebook": "~2.0.0"
+    "passport-facebook": "~2.0.0",
+    "browserify": "10.2.3",
+    "gulp": "~3.9.1",
+    "gulp-browserify": "0.5.1",
+    "karma": "0.12.16",
+    "karma-chai": "0.1.0",
+    "karma-chrome-launcher": "0.1.4",
+    "karma-mocha": "0.1.4",
+    "underscore": "1.5.2"
   },
   "devDependencies": {
     "jshint": "latest",
-    "browserify": "latest",
     "mocha": "latest"
   },
   "scripts": {

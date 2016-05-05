@@ -19,7 +19,7 @@ router.get('/profile', function(req, res, next) {
         else if (user === null) {
           return res.status(status.INTERNAL_SERVER_ERROR).json({error:'user unknown '+req.user});
         } {
-          return res.json(user);
+          return res.json({ user: req.user });
         }
     });
   });
