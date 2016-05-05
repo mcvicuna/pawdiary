@@ -17,7 +17,7 @@ _.each(services, function(factory, name) {
   components.factory(name, factory);
 });
 
-var app = angular.module('paw-diary', ['paw-diary.components', 'ngRoute']);
+var app = angular.module('paw-diary', ['paw-diary.components', 'ngRoute', 'ngMaterial']);
 
 app.config(function($routeProvider) {
   $routeProvider.
