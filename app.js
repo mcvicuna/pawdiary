@@ -4,14 +4,18 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var passport = require('passport');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/user');
+var profile = require('./routes/profile');
 
 var app = express();
 
 var wagner = require('wagner-core');
 var dependencies = require('./dependencies')(wagner,app);
+var model = require('./schemas/model.js')(wagner);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,10 +27,21 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(session({
+  genid: function(req) {
+    return require('crypto').randomBytes(48).toString('hex'); // use UUIDs for session IDs
+  },
+  secret: 'pawdiary_secret'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/', users);
+app.use('/', profile);
+
+wagner.invoke(require('./services/auth'), { app: app, wagner: wagner});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
