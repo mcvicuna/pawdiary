@@ -18,7 +18,7 @@ module.exports = new mongoose.Schema({
       required: true }
   },
   createdOn: { type: Date, required: true },
-  logOn: { type: Date, required: true },
+  logOn: { type: Date, required: true }
 });
 
 module.exports.set('toObject', { virtuals: true });

@@ -11,7 +11,8 @@ module.exports = function(wagner) {
   });
 
   var models = {
-    User: mongoose.model('User', require('./user'), 'users')
+    User: mongoose.model('User', require('./user'), 'users'),
+    Dog: mongoose.model('Dog', require('./dog'), 'dogs'),
   };
 
 
