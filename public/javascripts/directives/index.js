@@ -1,14 +1,13 @@
 // Load `*.js` under current directory as properties
 //  i.e., `User.js` will become `exports['User']` or `exports.User`
-// require('fs').readdirSync(__dirname + '/').forEach(function(file) {
+// var files = ['main.js','nav-bar.js'];
+// files.forEach(function(file) {
 //   if (file.match(/\.js$/) !== null && file !== 'index.js') {
 //     var name = file.replace('.js', '');
 //     exports[name] = require('./' + file);
 //   }
 // });
-
-// this is kludgey until I can find a better way to organize
-
+/*jshint -W069 */
 exports.main = function() {
   return {
     controller: 'MainController',
@@ -20,5 +19,26 @@ exports.navBar = function() {
   return {
     controller: 'NavBarController',
     templateUrl: '/templates/nav_bar.html'
+  };
+};
+
+exports.profile = function() {
+  return {
+    controller: 'ProfileController',
+    templateUrl: '/templates/profile.html'
+  };
+};
+
+exports.dogs = function() {
+  return {
+    controller: 'DogController',
+    templateUrl: '/templates/dogs.html'
+  };
+};
+
+exports.trials = function() {
+  return {
+    controller: 'TrialsController',
+    templateUrl: '/templates/trials.html'
   };
 };
