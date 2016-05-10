@@ -3,19 +3,19 @@ exports.MainController = function($scope, $user, $location, $mdSidenav, $timeout
 
     var allMuppets =[{
       name: 'Home',
-      iconurl: 'https://lh3.googleusercontent.com/-KGsfSssKoEU/AAAAAAAAAAI/AAAAAAAAAC4/j_0iL_6y3dE/s96-c-k-no/photo.jpg',
+      iconurl: 'images/ic_home_black_48px.svg',
       contenturl: '/'
   }, {
       name: 'Dogs',
-      iconurl: 'https://yt3.ggpht.com/-cEjxni3_Jig/AAAAAAAAAAI/AAAAAAAAAAA/cMW2NEAUf-k/s88-c-k-no/photo.jpg',
+      iconurl: 'images/ic_pets_black_48px.svg',
       contenturl: '/dogs.html'
   }, {
       name: 'Trials',
-      iconurl: 'https://goingforwardblog.files.wordpress.com/2013/01/swedish-chef.jpg',
+      iconurl: 'images/ic_timer_black_48px.svg',
       contenturl: '/trials.html',
   }, {
       name: 'Profile',
-      iconurl: 'https://lh5.googleusercontent.com/-c5rVqhf66e4/UVIKJ3fXLFI/AAAAAAAAACU/s-TU4ER7-Ro/w800-h800/kimmie.jpg',
+      iconurl: 'images/ic_person_black_48px.svg',
       contenturl: '/profile.html',
   }];
 

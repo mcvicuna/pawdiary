@@ -22,6 +22,14 @@ a {
   vertical-align: middle;
   width: 48px;
 }
+.tool-icon {
+  border-radius: 30px;
+  border: 1px solid #ddd;
+  display: inline-block;
+  margin: 4px 16px;
+  vertical-align: middle;
+  width: 48px;
+}
 .content-wrapper {
   position: relative;
 }
@@ -37,4 +45,21 @@ a {
 #primary-col img {
   display: block;
   max-width: 100%;
+}
+
+.md-table-thumbs div {
+  overflow:hidden;
+  width: 40px;
+  height:40px;
+  border-radius:20px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background-size:cover;
+  box-shadow: 0 8px 10px rgba(0,0,0,.3);
+  -webkit-box-shadow: 0 8px 10px rgba(0,0,0,.1);
+}
+
+.paw-diary md-input-container > p {
+  font-size: 0.8em;
+  text-align: left;
+  width: 100%;
 }

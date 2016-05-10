@@ -1,24 +1,24 @@
 <html ng-app="paw-diary">
   <head>
     <!-- Angular Material style sheet -->
-    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.css">
     <!-- Angular Material requires Angular.js Libraries -->
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-resource.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.js"></script>
 
     <!-- Angular Material Library -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
-    <script type="text/javascript"
-      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.js">
-    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.7/angular-material.min.js"></script>
+    
+    <!-- the app -->
     <script type="text/javascript" src="/bin/index.js"></script>
 
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
   </head>
-  <body layout='column' ng-controller="MainController">
+  <body layout='column' ng-controller="MainController" ng-cloak>
     <md-toolbar layout="row">
       <md-button ng-click="toggleSidenav('left')" hide-gt-sm class="md-icon-button menuBtn">
         <md-icon aria-label="Menu" md-svg-icon="/images/menu.svg"></md-icon>

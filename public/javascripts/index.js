@@ -3,7 +3,7 @@ var directives = require('./directives/index.js');
 var services = require('./services/index.js');
 var _ = require('underscore');
 
-var components = angular.module('paw-diary.components', ['ng', 'ngMaterial', 'ngResource']);
+var components = angular.module('paw-diary.components', ['ng', 'ngMaterial', 'ngResource', 'ngMessages']);
 
 _.each(controllers, function(controller, name) {
   components.controller(name, controller);
@@ -16,6 +16,7 @@ _.each(directives, function(directive, name) {
 _.each(services, function(factory, name) {
   components.factory(name, factory);
 });
+
 
 var app = angular.module('paw-diary', ['paw-diary.components', 'ngRoute', 'ngMaterial']);
 
@@ -31,7 +32,7 @@ app.config(function($routeProvider) {
     });
   $routeProvider.
     when('/profile.html', {
-      template: '<profile></profile>'
+      template: '<user-info></user-info>'
     });
   $routeProvider.
     when('/trials.html', {

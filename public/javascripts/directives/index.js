@@ -31,8 +31,15 @@ exports.profile = function() {
 
 exports.dogs = function() {
   return {
-    controller: 'DogController',
+    controller: 'DogsController',
     templateUrl: '/templates/dogs.html'
+  };
+};
+
+exports.dog = function() {
+  return {
+    controller: 'DogController',
+    templateUrl: '/templates/dog.html'
   };
 };
 
@@ -40,5 +47,12 @@ exports.trials = function() {
   return {
     controller: 'TrialsController',
     templateUrl: '/templates/trials.html'
+  };
+};
+
+exports.userInfo = function() {
+  return {
+    controller: 'UserInfoController',
+    templateUrl: '/templates/user-info.html'
   };
 };
