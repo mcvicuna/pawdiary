@@ -5,7 +5,7 @@ exports.$user = function($http) {
 
   s.loadUser = function() {
     $http.
-      get('/api/v1/me').
+      get('/api/v1/profile').
       success(function(data) {
         s.user = data.user;
       }).

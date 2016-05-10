@@ -1,22 +1,13 @@
-<div class="nav-bar">
-  <div class="nav-bar-contents" layout="row">
-    <div flex class="logo">
-      <img src="/images/pawdiary.png" style="max-height: 46px; max-width: 46px;"/>
+<div class='nav-bar'>
+  <div class='nav-bar-contents' layout='row'>
+    <div flex class='logo'>
+      <img src='/images/pawdiary.png' style='max-height: 46px; max-width: 46px;'/>
     </div>
-    <div flex class="title">
-      <a href="/">
+    <div flex class='title'>
+      <a href='/#/'>
         PAW Diary
       </a>
     </div>
-    <div flex class="user-info">
-        <div class="user" ng-show="user.user">
-        <img ng-src="{{user.user.profile.picture}}" style="max-height: 46px; max-width: 46px;"/>
-      </div>
-      <div class="login" ng-show="!user.user">
-        <a href="/auth/facebook?redirect=%2F%23%2F">
-          <img src="/images/LKMP7.png">
-        </a>
-      </div>
-    </div>
+      <user-info></user-info>
   </div>
 </div>

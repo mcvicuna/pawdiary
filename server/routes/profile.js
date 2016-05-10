@@ -4,7 +4,7 @@ var wagner = require('wagner-core');
 var status = require('http-status');
 
 /* GET users listing. */
-router.get('/profile', function(req, res, next) {
+router.get('/api/v1/profile', function(req, res, next) {
     if (!req.user) {
       return res.
         status(status.UNAUTHORIZED).

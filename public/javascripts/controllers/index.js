@@ -1,25 +1,18 @@
 // Load `*.js` under current directory as properties
 //  i.e., `User.js` will become `exports['User']` or `exports.User`
-//require('fs').readdirSync(__dirname + '/').forEach(function(file) {
+// var files = ['main.']
+// files.forEach(function(file) {
 //  if (file.match(/\.js$/) !== null && file !== 'index.js') {
 //    var name = file.replace('.js', '');
 //    exports[name] = require('./' + file);
 //  }
-//});
+// });
+/*jshint -W069 */
 
-// this is kludgey until I can find a better way to organize
-exports.MainController = function($scope, $user) {
-  $scope.user = $user;
-
-  setTimeout(function() {
-    $scope.$emit('MainController');
-  }, 0);
-};
-
-exports.NavBarController = function($scope, $user) {
-  $scope.user = $user;
-
-  setTimeout(function() {
-    $scope.$emit('NavBarController');
-  }, 0);
-};
+exports.MainController = require('./main').MainController;
+exports.NavBarController = require('./nav-bar').NavBarController;
+exports.DogsController = require('./dogs').DogsController;
+exports.DogController = require('./dog').DogController;
+exports.ProfileController = require('./profile').ProfileController;
+exports.TrialsController = require('./trials').TrialsController;
+exports.UserInfoController = require('./user-info').UserInfoController;

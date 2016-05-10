@@ -10,6 +10,7 @@ var passport = require('passport');
 var routes = require('./routes/index');
 var users = require('./routes/user');
 var profile = require('./routes/profile');
+var dogs = require('./routes/dogs');
 
 var app = express();
 
@@ -31,15 +32,16 @@ app.use(session({
   genid: function(req) {
     return require('crypto').randomBytes(48).toString('hex'); // use UUIDs for session IDs
   },
-  secret: 'pawdiary_secret'
+  secret: wagner.get('Config').sessionSecret
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/', routes);
 app.use('/', users);
 app.use('/', profile);
+app.use('/', dogs);
 
 wagner.invoke(require('./services/auth'), { app: app, wagner: wagner});
 

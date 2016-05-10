@@ -13,6 +13,8 @@ module.exports = function(wagner) {
   var models = {
     User: mongoose.model('User', require('./user'), 'users'),
     Dog: mongoose.model('Dog', require('./dog'), 'dogs'),
+    Trial: mongoose.model('Trial', require('./trial'), 'trials'),
+    Judge: mongoose.model('Judge', require('./judge'), 'judges'),
   };
 
 
