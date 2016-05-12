@@ -9,5 +9,5 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['./public/**/*.js','./public/**/*.html'], ['browserify']);
+  gulp.watch(['./public/**/*.js','./public/**/*.html', '!./public/bin/**/*', '!./public/typings/**/*'], ['browserify']);
 });

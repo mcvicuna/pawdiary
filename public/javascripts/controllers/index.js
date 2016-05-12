@@ -15,4 +15,5 @@ exports.DogsController = require('./dogs').DogsController;
 exports.DogController = require('./dog').DogController;
 exports.ProfileController = require('./profile').ProfileController;
 exports.TrialsController = require('./trials').TrialsController;
+exports.TrialController = require('./trial').TrialController;
 exports.UserInfoController = require('./user-info').UserInfoController;

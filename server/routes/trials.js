@@ -4,14 +4,13 @@ var wagner = require('wagner-core');
 var status = require('http-status');
 var mongoose = require('mongoose');
 
-router.post('/api/v1/dogs', function (req, res, next) {
+router.post('/api/v1/trials', function (req, res, next) {
   if (!req.user) {
     return res.
       status(status.UNAUTHORIZED).
       json({ error: 'Not logged in' });
   }
   wagner.invoke(function (Model) {
-
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }, function (err, user) {
       if (err) {
         console.log(err);  // handle errors!
@@ -21,112 +20,23 @@ router.post('/api/v1/dogs', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
-        var dog = new Model.Dog();
+        var trial = new Model.Trial(req.body);
 
-        dog.name = req.body.name;
-        dog.owner = user._id;
-        dog.createdOn = Date.now();
+        trial.createdOn = Date.now();
 
-        dog.save(function (err) {
+        trial.save(function (err) {
           if (err) {
             console.log(err);  // handle errors!
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
           }
-          user.dogs.push(dog);
-          user.save(function (err) {
-            if (err) {
-              console.log(err);  // handle errors!
-              return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-            }
-
-            return res.json(dog);
-          });
+          return res.json(trial);
         });
       }
     });
   });
 });
 
-router.get('/api/v1/dogs', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
-  }
-  wagner.invoke(function (Model) {
-    Model.User.findOne({ 'data.oauth': req.user.data.oauth }).populate('dogs').exec(function (err, user) {
-      if (err) {
-        console.log(err);  // handle errors!
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-      }
-      else if (user === null) {
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
-      }
-      else {
-
-        return res.json(user.dogs);
-
-      }
-    });
-  });
-});
-
-router.get('/api/v1/dogs/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
-  }
-  wagner.invoke(function (Model) {
-    Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
-      if (err) {
-        console.log(err);  // handle errors!
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-      }
-      else if (dog === null) {
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
-      } {
-
-        return res.json({ dog: dog });
-
-      }
-    });
-  });
-});
-
-router.post('/api/v1/dogs/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
-  }
-  wagner.invoke(function (Model) {
-    Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
-      if (err) {
-        console.log(err);  // handle errors!
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-      }
-      else if (dog === null) {
-        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
-      }
-      else {
-        dog.name = req.body.name;
-
-        dog.save(function (err) {
-          if (err) {
-            console.log(err);  // handle errors!
-            return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-          }
-          console.log("dog " + req.param.id + " updated");
-          return res.json(dog);
-        });
-      }
-    });
-  });
-});
-
-
-router.delete('/api/v1/dogs/:id', function (req, res) {
+router.get('/api/v1/trials', function (req, res) {
   if (!req.user) {
     return res.
       status(status.UNAUTHORIZED).
@@ -142,31 +52,103 @@ router.delete('/api/v1/dogs/:id', function (req, res) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
-        var index = user.dogs.indexOf(mongoose.Types.ObjectId(req.params.id));
-        if ( index > -1) {
-          user.dogs.splice(index,1);
-          user.save(function (err) {
-            if (err) {
-              console.log('trying to user after removing dog '+req.params.id+' '+err);  // handle errors!
-            }
-          });
-        }       
+        // we have the dogs, now find the trials that go with the dogs
+        Model.Trial.where('dog').in(user.dogs).populate('dog').exec(function (err, trials) {
+        if (err) {
+          console.log(err);  // handle errors!
+          return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+        }
+        else if (user === null) {
+          return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
+        }
 
-        Model.Dog.findByIdAndRemove(mongoose.Types.ObjectId(req.params.id), {}, function (err, dog) {
+        return res.json(trials);
+      });
+
+      }
+    });
+  });
+});
+
+router.get('/api/v1/trials/:id', function (req, res) {
+  if (!req.user) {
+    return res.
+      status(status.UNAUTHORIZED).
+      json({ error: 'Not logged in' });
+  }
+  wagner.invoke(function (Model) {
+    Model.Trial.findById(mongoose.Types.ObjectId(req.params.id), function (err, trial) {
+      if (err) {
+        console.log(err);  // handle errors!
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+      }
+      else if (trial === null) {
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'trial unknown ' + req.params.id });
+      } {
+
+        return res.json({ trial: trial });
+
+      }
+    });
+  });
+});
+
+router.post('/api/v1/trials/:id', function (req, res) {
+  if (!req.user) {
+    return res.
+      status(status.UNAUTHORIZED).
+      json({ error: 'Not logged in' });
+  }
+  wagner.invoke(function (Model) {
+    Model.Trial.findById(mongoose.Types.ObjectId(req.params.id), function (err, trial) {
+      if (err) {
+        console.log(err);  // handle errors!
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+      }
+      else if (trial === null) {
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'trial unknown ' + req.params.id });
+      }
+      else {
+        Model.Trial.schema.eachPath(function(path) {
+            if (  req.body.hasOwnProperty(path) ) {
+              trial[path]=req.body[path];
+            } 
+        });
+
+        trial.save(function (err) {
           if (err) {
             console.log(err);  // handle errors!
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
           }
-          else if (dog === null) {
-            return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
-          }
-          else {
-            res.json(dog);
-          }
+          console.log("trial " + req.param.id + " updated");
+          return res.json(trial);
         });
       }
+    });
   });
-}); 
+});
+
+
+router.delete('/api/v1/trials/:id', function (req, res) {
+  if (!req.user) {
+    return res.
+      status(status.UNAUTHORIZED).
+      json({ error: 'Not logged in' });
+  }
+  wagner.invoke(function (Model) {
+    Model.Trial.findByIdAndRemove(mongoose.Types.ObjectId(req.params.id), {}, function (err, trial) {
+      if (err) {
+        console.log(err);  // handle errors!
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+      }
+      else if (trial === null) {
+        return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'trial unknown ' + req.params.id });
+      }
+      else {
+        res.json(trial);
+      }
+    });
+  });
 });
 
 module.exports = router;

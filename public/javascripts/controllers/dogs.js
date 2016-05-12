@@ -1,9 +1,12 @@
-exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $dogs) {
+var mongoose = require('mongoose');
+
+exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $dogs, $schemas) {
   var originatorEvent;
 
   $scope.user = $user;
   $log.log('Hello from DogsController');
   $scope.editing = null;
+  $scope.mode = 0;
   $scope.headers = [
     {
       name: '',
@@ -21,20 +24,22 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
 
   $scope.refresh = function () {
     $dogs.query(function (dogs) {
-      $scope.dogs = dogs;
+      $scope.dogs = dogs; 
     });
   };
 
   $scope.refresh();
 
   $scope.newDog = function () {
-    var dog = new $dogs({ name: "", thumb: "/images/ic_insert_photo_black_48px.svg" });
+    var dog = new mongoose.Document({}, $schemas.Dog);
+    $scope.mode = 1;
     $scope.editing = dog;
     $rootScope.$broadcast('DogController.dog', dog);
     $scope.dogs.unshift(dog);
   };
 
   $scope.onEdit = function (dog) {
+    $scope.mode = 2;
     $scope.editing = dog;
     $rootScope.$broadcast('DogController.dog', dog);
   };
@@ -53,11 +58,19 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
 
   $scope.$on('DogController.save', function (event, dog) {
     if ($scope.editing) {
-      //$scope.editing = new $dogs(dog);
-      $dogs.save({id:$scope.editing.id},dog,function() {
-        $scope.editing = null;
-        $scope.refresh();        
-      });
+      if ( $scope.mode == 1 ) {
+        $scope.editing = new $dogs(dog);
+        $scope.editing.$save(function() {
+          $scope.refresh();        
+        });
+      }
+      else {
+        $dogs.save({id:$scope.editing.id},dog,function() {
+          $scope.refresh();        
+        });
+      }
+      $scope.mode = 0;
+      
     }
   });
 

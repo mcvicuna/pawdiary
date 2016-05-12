@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var schemas = require('../../common/schemas/index.js');
 
 module.exports = function(wagner) {
   var dbConnectionString = wagner.invoke(function(Config) {
@@ -11,10 +12,10 @@ module.exports = function(wagner) {
   });
 
   var models = {
-    User: mongoose.model('User', require('./user'), 'users'),
-    Dog: mongoose.model('Dog', require('./dog'), 'dogs'),
-    Trial: mongoose.model('Trial', require('./trial'), 'trials'),
-    Judge: mongoose.model('Judge', require('./judge'), 'judges'),
+    User: mongoose.model('User', schemas.User, 'users'),
+    Dog: mongoose.model('Dog', schemas.Dog, 'dogs'),
+    Trial: mongoose.model('Trial', schemas.Trial, 'trials'),
+    Judge: mongoose.model('Judge', schemas.Judge, 'judges'),
   };
 
 

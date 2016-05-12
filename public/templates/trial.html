@@ -1,0 +1,103 @@
+<div layout="column" class="md-inline-form">
+  <form name="trialForm">
+    <div layout-padding="" layout-gt-xs="row">
+      <md-input-container class="md-block">
+        <label>Dog</label>
+        <md-select required md-no-askterisk name="dogName" ng-model="trial.dog">
+          <md-option ng-repeat="dog in dogs" value="{{dog.id}}">{{dog.name}}</md-option>
+        </md-select>
+        <div ng-messages="trialForm.dogName.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Class</label>
+        <md-select required md-no-askterisk name="class" ng-model="trial.class">
+          <md-option ng-repeat="class in classes" value="{{class}}">{{class}}</md-option>
+        </md-select>
+        <div ng-messages="trialForm.class.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Difficulty</label>
+        <md-select required md-no-askterisk name="difficulty" ng-model="trial.difficulty">
+          <md-option ng-repeat="item in difficulties" value="{{item}}">{{item}}</md-option>
+        </md-select>
+        <div ng-messages="trialForm.difficulty.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Height</label>
+        <md-select required md-no-askterisk name="height" ng-model="trial.height">
+          <md-option ng-repeat="item in heights" value="{{item}}">{{item}}</md-option>
+        </md-select>
+        <div ng-messages="trialForm.height.$error">
+          <div ng-message="required">This is required.</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <md-checkbox ng-model="trial.preferred" aria-label="preferred">preferred</md-checkbox>
+      </md-input-container>      
+    </div>
+    <div layout-padding="" layout-gt-xs="row">
+      <md-input-container class="md-block">
+        <label>Points</label>
+        <input required type="number" step="any" name="points" ng-model="trial.points" min="0" max="100" />
+        <div ng-messages="trialForm.points.$error" multiple md-auto-hide="false">
+          <div ng-message="required">This is required</div>
+          <div ng-message="min">Please enter a value greater then 0</div>
+          <div ng-message="pattern">You must enter numbers </div>
+          <div ng-message="max">You must enter a value less then 100</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <md-checkbox ng-model="trial.nq" aria-label="Didn't qualify">NQ</md-checkbox>
+      </md-input-container>
+      <md-datepicker ng-model="tempDate" ng-change="trial.date = tempDate.toISOString()">Enter Date</md-datepicker>
+    </div>
+    <div layout-padding="" layout-gt-xs="row">
+      <md-input-container class="md-block">
+        <label>Dog's Time</label>
+        <input type="number" step="any" name="time" ng-model="trial.time" min="0" max="100" />
+        <div ng-messages="trialForm.time.$error" multiple md-auto-hide="false">
+          <div ng-message="min">Please enter a value greater then 0</div>
+          <div ng-message="pattern">You must enter numbers </div>
+          <div ng-message="max">You must enter a value less then 100</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Course Time</label>
+        <input type="number" step="any" name="SCT" ng-model="trial.SCT" min="0" max="100" />
+        <div ng-messages="trialForm.SCT.$error" multiple md-auto-hide="false">
+          <div ng-message="min">Please enter a value greater then 0</div>
+          <div ng-message="pattern">You must enter numbers </div>
+          <div ng-message="max">You must enter a value less then 100</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block">
+        <label>Yards</label>
+        <input type="number" step="any" name="yards" ng-model="trial.yards" min="0" max="1000" />
+        <div ng-messages="trialForm.yards.$error" multiple md-auto-hide="false">
+          <div ng-message="min">Please enter a value greater then 0</div>
+          <div ng-message="pattern">You must enter numbers </div>
+          <div ng-message="max">You must enter a value less then 1000</div>
+        </div>
+      </md-input-container>      
+    </div>
+    <!-- form buttons        -->
+    <div layout-padding="" layout="row">
+      <md-button class="md-fab md-primary" aria-label="save" ng-click="onSave()">
+        <md-icon md-svg-src="/images/ic_save_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-fab md-primary" aria-label="cancel" ng-click="onCancel()">
+        <md-icon md-svg-src="/images/ic_cancel_black_48px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-fab md-primary" aria-label="delete" ng-click="onDelete()">
+        <md-icon md-svg-src="/images/ic_delete_forever_black_48px.svg"></md-icon>
+      </md-button>
+    </div>
+  </form>
+</div>
+</div>
