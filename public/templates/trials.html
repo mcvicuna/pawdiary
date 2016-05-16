@@ -1,1 +1,58 @@
-trials screen
+<div class="trials-view">
+    <section>
+                <span flex></span>
+                <md-button class="md-fab md-primary md-hue-3" aria-label="Add" ng-click="newTrial()" ng-disabled="editing!=null">
+                    <md-icon md-svg-src="/images/ic_add_black_24px.svg"></md-icon>
+                </md-button>
+                <span flex></span>
+    </section>
+    <section>
+        <div id="md-table-template">
+            <table md-colresize="md-colresize" class="md-table">
+                <thead>
+                    <tr class="md-table-headers-row">
+                        <th ng-repeat="h in headers" class="md-table-header">
+                            <span>{{h.name}}</span>
+                        </th>
+                        <th class="md-table-header"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in trials" class="md-table-content-row">
+                        <td ng-repeat="h in headers" ng-class="customClass[h.field]" ng-if="(h.field != 'thumb') && (editing != c)" class="md-table-content">{{c[h.field];}}</td>
+                        <td class="md-table-td-more" ng-if="editing != c">
+                            <md-menu>
+                                <md-button aria-label="Open trials interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                                    <md-icon md-svg-src="/images/ic_more_vert_black_48px.svg"></md-icon>
+                                </md-button>
+                                <md-menu-content width="4">
+                                    <md-menu-item>
+                                        <md-button ng-click="onEdit(c)">
+                                            <md-icon md-svg-src="/images/ic_edit_black_48px.svg"></md-icon>
+                                            Edit
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="onRetire(c)">
+                                            <md-icon md-svg-src="/images/ic_watch_later_black_48px.svg"></md-icon>
+                                            Retire
+                                        </md-button>
+                                    </md-menu-item>
+                                    <md-menu-item>
+                                        <md-button ng-click="onHide(c)">
+                                            <md-icon md-svg-src="/images/ic_visibility_off_black_48px.svg"></md-icon>
+                                            Hide
+                                        </md-button>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </td>
+                        <td ng-if="editing == c">
+                            <trial></trial>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

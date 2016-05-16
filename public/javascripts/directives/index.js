@@ -43,6 +43,13 @@ exports.dog = function() {
   };
 };
 
+exports.trial = function() {
+  return {
+    controller: 'TrialController',
+    templateUrl: '/templates/trial.html'
+  };
+};
+
 exports.trials = function() {
   return {
     controller: 'TrialsController',
