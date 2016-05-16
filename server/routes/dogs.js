@@ -21,11 +21,7 @@ router.post('/api/v1/dogs', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
-        var dog = new Model.Dog();
-
-        dog.name = req.body.name;
-        dog.owner = user._id;
-        dog.createdOn = Date.now();
+        var dog = new Model.Dog(req.body);
 
         dog.save(function (err) {
           if (err) {
@@ -110,7 +106,11 @@ router.post('/api/v1/dogs/:id', function (req, res) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
       }
       else {
-        dog.name = req.body.name;
+        Model.Dog.schema.eachPath(function(path) {
+            if (  req.body.hasOwnProperty(path) ) {
+              dog[path]=req.body[path];
+            } 
+        });
 
         dog.save(function (err) {
           if (err) {

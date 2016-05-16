@@ -14,7 +14,20 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
     }, {
       name: 'Name',
       field: 'name'
-    }];
+    },
+    {
+      name: 'Difficulty',
+      field: 'difficulty'
+    },
+    {
+      name: 'Points',
+      field: 'points'
+    },
+    {
+      name: 'Double',
+      field: 'qq'
+    }, 
+  ];
 
   $scope.dogs = [];
 

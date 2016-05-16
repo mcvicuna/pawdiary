@@ -47,6 +47,55 @@ a {
   max-width: 100%;
 }
 
+.paw-diary md-input-container > p {
+  font-size: 0.8em;
+  text-align: left;
+  width: 100%;
+}
+
+.md-table {
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+.md-table tbody tr:hover, .md-table tbody tr:focus {
+  cursor:pointer;
+  background-color:rgba(63,81,181,0.2);
+}
+
+.md-table-header {
+  border-bottom: 1px solid rgb(230,230,230);
+  color: rgb(130,130,130);
+  text-align: left;
+  font-size: 0.75em;
+  font-weight: 700;
+  padding: 16px 16px 16px 0;
+}
+
+.md-table-header a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.md-table-content {
+  white-space: nowrap;
+  font-size: 0.8em;
+  padding: 8px 8px 8px 0;
+  height: 72px;
+}
+
+.md-table-td-more {
+  max-width:72px;
+  width:72px;
+  padding:16px;
+}
+
+.md-table-thumbs {
+  max-width: 48px;
+  width: 48px;
+  padding: 0px 0px;
+}
+
 .md-table-thumbs div {
   overflow:hidden;
   width: 40px;
@@ -58,8 +107,23 @@ a {
   -webkit-box-shadow: 0 8px 10px rgba(0,0,0,.1);
 }
 
-.paw-diary md-input-container > p {
-  font-size: 0.8em;
-  text-align: left;
-  width: 100%;
+.md-table-footer {
+  height:40px;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.md-table-count-info {
+  line-height:40px;
+  font-size:.75em;
+}
+
+.md-table-footer-item {
+  width: 40px;
+  height: 40px;
+  vertical-align:middle;
+}
+
+.md-table-active-page {
+  font-weight: 700;
 }

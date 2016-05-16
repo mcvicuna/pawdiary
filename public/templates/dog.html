@@ -10,7 +10,39 @@
           <div ng-message="md-minlength">The name has to be more than 1 characters long.</div>
         </div>
       </md-input-container>
-      
+      <div layout-padding="" layout-gt-xs="row">
+        <md-input-container class="md-block">
+          <label>Difficulty</label>
+          <md-select required md-no-askterisk name="difficulty" ng-model="dog.difficulty">
+            <md-option ng-repeat="item in difficulties" value="{{item}}">{{item}}</md-option>
+          </md-select>
+          <div ng-messages="dogForm.difficulty.$error">
+            <div ng-message="required">This is required.</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Points</label>
+          <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
+          <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
+            <div ng-message="required">This is required</div>
+            <div ng-message="min">Please enter a value greater then 0</div>
+            <div ng-message="pattern">You must enter numbers </div>
+            <div ng-message="max">You must enter a value less then 100</div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Double</label>
+          <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
+          <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
+            <div ng-message="required">This is required</div>
+            <div ng-message="min">Please enter a value greater then 0</div>
+            <div ng-message="pattern">You must enter numbers </div>
+            <div ng-message="max">You must enter a value less then 100</div>
+          </div>
+        </md-input-container>
+        
+      </div>
+
       <md-button class="md-fab md-primary" aria-label="save" ng-click="onSave()">
         <md-icon md-svg-src="/images/ic_save_black_48px.svg"></md-icon>
       </md-button>
