@@ -1,4 +1,11 @@
 var mongoose = require('mongoose');
+var DogController = require('./dog');
+
+var modeEnum = {
+  DELETE: -1,
+  ADD: 1,
+  UPDATE: 2  
+};
 
 exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $dogs, $schemas) {
   var originatorEvent;
@@ -26,7 +33,7 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
     {
       name: 'Double',
       field: 'qq'
-    }, 
+    },
   ];
 
   $scope.dogs = [];
@@ -37,68 +44,62 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
 
   $scope.refresh = function () {
     $dogs.query(function (dogs) {
-      $scope.dogs = dogs; 
+      $scope.dogs = dogs;
     });
   };
 
   $scope.refresh();
 
+  function dogSave(answer) {
+    $log.log('saving dog with ' + answer.mode);
+    if (answer.mode == modeEnum.ADD ) {
+      newDog = new $dogs(new mongoose.Document(answer.dog, $schemas.Dog));
+      delete newDog.id;
+      newDog.createdOn = Date.now();
+      newDog.$save(function () {
+        $scope.refresh();
+      });
+    }
+    else if (answer.mode == modeEnum.UPDATE ) {
+      $dogs.save({ id: answer.dog.id }, answer.dog, function () {
+        $scope.refresh();
+      });
+    }
+    else if (answer.mode == modeEnum.DELETE ) {
+      $dogs.remove({ id: answer.dog.id, }, answer.dog, function () {
+        $scope.refresh();
+      });
+    }
+  }
+  
+  function showDogDialog($event, dog, mode) {
+    $mdDialog.show({
+      controller: DogController.DogController,
+      templateUrl: 'templates/dog.html',
+      parent: angular.element(document.body),
+      targetEvent: $event,
+      clickOutsideToClose: true,
+      fullscreen: true,
+      locals: { dog: dog, mode: mode }
+    })
+      .then(dogSave, function () { });
+  }
+
+
+
   $scope.newDog = function () {
-    var dog = new mongoose.Document({}, $schemas.Dog);
-    $scope.mode = 1;
-    $scope.editing = dog;
-    $rootScope.$broadcast('DogController.dog', dog);
-    $scope.dogs.unshift(dog);
+    showDogDialog(null, new mongoose.Document({}, $schemas.Dog), modeEnum.ADD);
+    
   };
 
-  $scope.onEdit = function (dog) {
-    $scope.mode = 2;
-    $scope.editing = dog;
-    $rootScope.$broadcast('DogController.dog', dog);
+  $scope.onEdit = function ($event, dog) {
+    showDogDialog($event, dog, modeEnum.UPDATE);    
   };
 
   $scope.openMenu = function ($mdOpenMenu, event) {
     originatorEvent = event;
     $mdOpenMenu(event);
   };
-
-  // 
-  $scope.$on('DogController', function (event, msg) {
-    if ($scope.editing) {
-      $rootScope.$broadcast('DogController.dog', $scope.editing);
-    }
-  });
-
-  $scope.$on('DogController.save', function (event, dog) {
-    if ($scope.editing) {
-      if ( $scope.mode == 1 ) {
-        $scope.editing = new $dogs(dog);
-        $scope.editing.$save(function() {
-          $scope.refresh();        
-        });
-      }
-      else {
-        $dogs.save({id:$scope.editing.id},dog,function() {
-          $scope.refresh();        
-        });
-      }
-      $scope.mode = 0;
-      
-    }
-  });
-
-  $scope.$on('DogController.delete', function (event, dog) {
-    $dogs.remove({ id: dog.id, }, dog, function () {
-      $scope.editing = null;
-      $scope.refresh();
-    });
-  });
-
-  $scope.$on('DogController.cancel', function (event) {
-    if ($scope.editing) {
-      $scope.editing = null;
-    }
-  });
 
   setTimeout(function () {
     $scope.$emit('DogsController');

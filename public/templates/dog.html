@@ -1,48 +1,50 @@
-<div class="md-inline-form">
-  <md-content layout-padding="">
-    <form name="dogForm">
-      <md-input-container class="md-block">
-        <label>Dog's name</label>
-        <input md-maxlength="128" md-minlength="1" required md-no-askterisk name="dogName" ng-model="dog.name">
-        <div ng-messages="dogForm.dogName.$error">
-          <div ng-message="required">This is required.</div>
-          <div ng-message="md-maxlength">The name has to be less than 128 characters long.</div>
-          <div ng-message="md-minlength">The name has to be more than 1 characters long.</div>
-        </div>
-      </md-input-container>
-      <div layout-padding="" layout-gt-xs="row">
+<md-dialog>
+  <div class="md-inline-form">
+    <md-dialog-content layout-padding="">
+      <form name="dogForm">
         <md-input-container class="md-block">
-          <label>Difficulty</label>
-          <md-select required md-no-askterisk name="difficulty" ng-model="dog.difficulty">
-            <md-option ng-repeat="item in difficulties" value="{{item}}">{{item}}</md-option>
-          </md-select>
-          <div ng-messages="dogForm.difficulty.$error">
+          <label>Dog's name</label>
+          <input md-maxlength="128" md-minlength="1" required md-no-askterisk name="dogName" ng-model="dog.name">
+          <div ng-messages="dogForm.dogName.$error">
             <div ng-message="required">This is required.</div>
+            <div ng-message="md-maxlength">The name has to be less than 128 characters long.</div>
+            <div ng-message="md-minlength">The name has to be more than 1 characters long.</div>
           </div>
         </md-input-container>
-        <md-input-container class="md-block">
-          <label>Points</label>
-          <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
-          <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
-            <div ng-message="required">This is required</div>
-            <div ng-message="min">Please enter a value greater then 0</div>
-            <div ng-message="pattern">You must enter numbers </div>
-            <div ng-message="max">You must enter a value less then 100</div>
-          </div>
-        </md-input-container>
-        <md-input-container class="md-block">
-          <label>Double</label>
-          <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
-          <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
-            <div ng-message="required">This is required</div>
-            <div ng-message="min">Please enter a value greater then 0</div>
-            <div ng-message="pattern">You must enter numbers </div>
-            <div ng-message="max">You must enter a value less then 100</div>
-          </div>
-        </md-input-container>
-        
-      </div>
-
+        <div layout-padding="" layout-gt-xs="row">
+          <md-input-container class="md-block">
+            <label>Difficulty</label>
+            <md-select required md-no-askterisk name="difficulty" ng-model="dog.difficulty">
+              <md-option ng-repeat="item in difficulties" value="{{item}}">{{item}}</md-option>
+            </md-select>
+            <div ng-messages="dogForm.difficulty.$error">
+              <div ng-message="required">This is required.</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Points</label>
+            <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
+            <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
+              <div ng-message="required">This is required</div>
+              <div ng-message="min">Please enter a value greater then 0</div>
+              <div ng-message="pattern">You must enter numbers </div>
+              <div ng-message="max">You must enter a value less then 100</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>Double</label>
+            <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
+            <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
+              <div ng-message="required">This is required</div>
+              <div ng-message="min">Please enter a value greater then 0</div>
+              <div ng-message="pattern">You must enter numbers </div>
+              <div ng-message="max">You must enter a value less then 100</div>
+            </div>
+          </md-input-container>
+        </div>
+      </form>
+    </md-dialog-content>
+    <md-dialog-actions>
       <md-button class="md-fab md-primary" aria-label="save" ng-click="onSave()">
         <md-icon md-svg-src="/images/ic_save_black_48px.svg"></md-icon>
       </md-button>
@@ -52,6 +54,7 @@
       <md-button class="md-fab md-primary" aria-label="delete" ng-click="onDelete()">
         <md-icon md-svg-src="/images/ic_delete_forever_black_48px.svg"></md-icon>
       </md-button>
-    </form>
-  </md-content>
-</div>
+    </md-dialog-actions>
+
+  </div>
+</md-dialog>

@@ -9,12 +9,12 @@
 	],
 	"tasks": [
 		{
-			"taskName": "browserify",
+			"taskName": "watch",
 			"isBuildCommand": true,
 			"showOutput": "always"
 		},		
 		{
-			"taskName": "watch",
+			"taskName": "browserify",
 			"isBuildCommand": true,
 			"showOutput": "always"
 		}

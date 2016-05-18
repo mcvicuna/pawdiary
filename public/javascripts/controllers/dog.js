@@ -1,31 +1,29 @@
-exports.DogController = function ($scope, $rootScope, $log, $dogs) {
-  $scope.dog = new $dogs({ name: "", thumb: "/images/ic_insert_photo_black_48px.svg" });;
+exports.DogController = function ($scope, $rootScope, $mdDialog, $log, $dogs, dog, mode) {
+  $scope.dog = angular.copy(dog);
   $log.log('Hello from DogController');
-  $scope.difficulties = ['novice','open','excellent','masters'];
-
-
-  $rootScope.$on('DogController.dog', function (event, dog) {
-    $scope.dog = angular.copy(dog);
-    $log.log('Hello from dogEditing');
-  });
+  $scope.difficulties = ['novice', 'open', 'excellent', 'masters'];
 
   $scope.onSave = function () {
     $scope.dogForm.$setSubmitted();
     if ($scope.dogForm.$valid) {
-      $scope.$emit('DogController.save', $scope.dog);
+      $log.log('saving dog with mode '+mode);
+      $mdDialog.hide({dog:$scope.dog, mode:mode});
     }
   };
 
   $scope.onDelete = function () {
-    $scope.$emit('DogController.delete', $scope.dog);
+    $mdDialog.hide({dog:$scope.dog, mode:-1});
   };
-  
+
   $scope.onCancel = function () {
-    $scope.$emit('DogController.cancel');
+    $mdDialog.cancel();
   };
 
   setTimeout(function () {
     $scope.$emit('DogController');
   }, 0);
 
+  $scope.closeDialog = function () {
+    $mdDialog.cancel()
+  };
 };
