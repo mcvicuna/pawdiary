@@ -1,7 +1,7 @@
 var controllers = require('./controllers/index.js');
 var directives = require('./directives/index.js');
 var services = require('./services/index.js');
-var _ = require('underscore');
+var _ = require('underscore'); 
 
 var components = angular.module('paw-diary.components', ['ng', 'ngMaterial', 'ngResource', 'ngMessages']);
 
@@ -24,7 +24,7 @@ app.config(function($routeProvider) {
   $routeProvider.
     when('/', {
       // this has the controller backed in
-      templateUrl: 'templates/main.html'
+      template: '<summaries></summaries>'
     });
   $routeProvider.
     when('/dogs.html', {

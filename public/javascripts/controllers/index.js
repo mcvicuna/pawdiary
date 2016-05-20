@@ -17,3 +17,4 @@ exports.ProfileController = require('./profile').ProfileController;
 exports.TrialsController = require('./trials').TrialsController;
 exports.TrialController = require('./trial').TrialController;
 exports.UserInfoController = require('./user-info').UserInfoController;
+exports.SummariesController = require('./summaries').SummariesController;

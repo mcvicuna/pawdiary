@@ -20,6 +20,10 @@ exports.TrialsController = function ($scope, $rootScope, $user, $log, $mdDialog,
       field: 'dogName'
     },
     {
+      name: 'Date',
+      field: 'date'
+    },
+    {
       name: 'Class',
       field: 'class'
     },

@@ -23,22 +23,22 @@
           </md-input-container>
           <md-input-container class="md-block">
             <label>Points</label>
-            <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
+            <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="800" />
             <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
               <div ng-message="required">This is required</div>
               <div ng-message="min">Please enter a value greater then 0</div>
               <div ng-message="pattern">You must enter numbers </div>
-              <div ng-message="max">You must enter a value less then 100</div>
+              <div ng-message="max">You must enter a value less then 800</div>
             </div>
           </md-input-container>
           <md-input-container class="md-block">
             <label>Double</label>
-            <input required type="number" step="any" name="points" ng-model="dog.points" min="0" max="100" />
-            <div ng-messages="dogForm.points.$error" multiple md-auto-hide="false">
+            <input required type="number" step="any" name="qq" ng-model="dog.qq" min="0" max="1000" />
+            <div ng-messages="dogForm.qq.$error" multiple md-auto-hide="false">
               <div ng-message="required">This is required</div>
               <div ng-message="min">Please enter a value greater then 0</div>
               <div ng-message="pattern">You must enter numbers </div>
-              <div ng-message="max">You must enter a value less then 100</div>
+              <div ng-message="max">You must enter a value less then 1000</div>
             </div>
           </md-input-container>
         </div>

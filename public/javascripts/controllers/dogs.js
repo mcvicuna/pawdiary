@@ -27,11 +27,11 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
       field: 'difficulty'
     },
     {
-      name: 'Points',
+      name: 'Starting Points',
       field: 'points'
     },
     {
-      name: 'Double',
+      name: 'Starting Double',
       field: 'qq'
     },
   ];

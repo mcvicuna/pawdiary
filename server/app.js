@@ -12,6 +12,7 @@ var users = require('./routes/user');
 var profile = require('./routes/profile');
 var dogs = require('./routes/dogs');
 var trials = require('./routes/trials');
+var summary = require('./routes/summary');
 
 var app = express();
 
@@ -44,6 +45,7 @@ app.use('/', users);
 app.use('/', profile);
 app.use('/', dogs);
 app.use('/',trials);
+app.use('/',summary);
 
 wagner.invoke(require('./services/auth'), { app: app, wagner: wagner});
 

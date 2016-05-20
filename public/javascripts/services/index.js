@@ -14,4 +14,5 @@ exports.$user = require('./me').$user;
 exports.$dogs = require('./dogs').$dogs;
 exports.$trials = require('./trials').$trials;
 exports.$schemas = require('./schemas').$schemas;
+exports.$summaries = require('./summaries').$summaries;
 

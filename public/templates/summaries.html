@@ -1,0 +1,46 @@
+<md-content class="md-padding" layout-xs="column" layout="column">
+    <md-card ng-repeat="summary in summaries">
+        <md-card-header>
+            <md-card-avatar>
+                    <img ng-src="{{summary.dog.thumb}}" class="md-card-avatar">
+            </md-card-avatar>
+            <md-card-title>
+                <md-card-header-text>
+                    <span class="md-title">{{summary.dog.name}}</span>
+                    <span class="md-subhead">{{summary.dog.difficulty}}</span>
+                </md-card-header-text>
+            </md-card-title>
+        </md-card-header>
+        <md-card-content layout="row" layout-align="space-between">
+            <table md-colresize="md-colresize" class="md-table">
+                <thead>
+                    <tr class="md-table-headers-row">
+                        <th class="md-table-header">
+                            <span></span>
+                        </th>
+                        <th class="md-table-header">
+                            <span>Points</span>
+                        </th>
+                        <th class="md-table-header">
+                            <span>Double Qs</span>
+                        </th>
+                        <th class="md-table-header"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="md-table-content-row">
+                        <td class="md-table-content"><span>Starting</span></td>
+                        <td class="md-table-content"><span>{{summary.dog.points}}</span></td>
+                        <td class="md-table-content"><span>{{summary.dog.qq}}</span></td>
+                    </tr>
+                    <tr class="md-table-content-row">
+                        <td class="md-table-content"><span>Total</span></td>
+                        <td class="md-table-content"><span>{{summary.points}}</span></td>
+                        <td class="md-table-content"><span>{{summary.qq}}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </md-card-content>
+    </md-card>
+</md-content>

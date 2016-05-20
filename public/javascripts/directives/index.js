@@ -8,58 +8,65 @@
 //   }
 // });
 /*jshint -W069 */
-exports.main = function() {
+exports.main = function () {
   return {
     controller: 'MainController',
     templateUrl: '/templates/main.html'
   };
 };
 
-exports.navBar = function() {
+exports.navBar = function () {
   return {
     controller: 'NavBarController',
     templateUrl: '/templates/nav_bar.html'
   };
 };
 
-exports.profile = function() {
+exports.profile = function () {
   return {
     controller: 'ProfileController',
     templateUrl: '/templates/profile.html'
   };
 };
 
-exports.dogs = function() {
+exports.dogs = function () {
   return {
     controller: 'DogsController',
     templateUrl: '/templates/dogs.html'
   };
 };
 
-exports.dog = function() {
+exports.dog = function () {
   return {
     controller: 'DogController',
     templateUrl: '/templates/dog.html'
   };
 };
 
-exports.trial = function() {
+exports.trial = function () {
   return {
     controller: 'TrialController',
     templateUrl: '/templates/trial.html'
   };
 };
 
-exports.trials = function() {
+exports.trials = function () {
   return {
     controller: 'TrialsController',
     templateUrl: '/templates/trials.html'
   };
 };
 
-exports.userInfo = function() {
+exports.userInfo = function () {
   return {
     controller: 'UserInfoController',
     templateUrl: '/templates/user-info.html'
   };
 };
+
+exports.summaries = function () {
+  return {
+    controller: 'SummariesController',
+    templateUrl: '/templates/summaries.html'
+  };
+}

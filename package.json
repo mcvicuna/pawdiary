@@ -41,6 +41,7 @@
     "wagner-core": "~0.2.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jshint": "latest",
     "mocha": "latest"
   }

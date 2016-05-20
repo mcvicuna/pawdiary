@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 module.exports = new mongoose.Schema({
   name: { type: String, required: false },
   dog: { type: mongoose.Schema.Types.ObjectId, ref: 'Dog' },
-  class: { type: String, default:'jumpers', enum: ['jumpers', 'standard', 'fast'] },
+  class: { type: String, default:'jumpers', enum: ['jumpers', 'standard'] },
   difficulty: { type: String, default: 'excellent', enum: ['novice', 'open', 'excellent', 'masters'] },
   height: { type: String, default:'20', enum: ['8', '10', '12', '14', '16', '18', '20', '22', '24'] },
   points: { type: Number, default: 0, required: true },
