@@ -5,10 +5,8 @@ var status = require('http-status');
 var mongoose = require('mongoose');
 
 router.post('/api/v1/dogs', function (req, res, next) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
 
@@ -43,11 +41,9 @@ router.post('/api/v1/dogs', function (req, res, next) {
   });
 });
 
-router.get('/api/v1/dogs', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/dogs', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }).populate('dogs').exec(function (err, user) {
@@ -67,11 +63,9 @@ router.get('/api/v1/dogs', function (req, res) {
   });
 });
 
-router.get('/api/v1/dogs/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/dogs/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
@@ -90,11 +84,9 @@ router.get('/api/v1/dogs/:id', function (req, res) {
   });
 });
 
-router.post('/api/v1/dogs/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.post('/api/v1/dogs/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
@@ -106,10 +98,10 @@ router.post('/api/v1/dogs/:id', function (req, res) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
       }
       else {
-        Model.Dog.schema.eachPath(function(path) {
-            if (  req.body.hasOwnProperty(path) ) {
-              dog[path]=req.body[path];
-            } 
+        Model.Dog.schema.eachPath(function (path) {
+          if (req.body.hasOwnProperty(path)) {
+            dog[path] = req.body[path];
+          }
         });
 
         dog.save(function (err) {
@@ -126,11 +118,9 @@ router.post('/api/v1/dogs/:id', function (req, res) {
 });
 
 
-router.delete('/api/v1/dogs/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.delete('/api/v1/dogs/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }).exec(function (err, user) {
@@ -143,14 +133,14 @@ router.delete('/api/v1/dogs/:id', function (req, res) {
       }
       else {
         var index = user.dogs.indexOf(mongoose.Types.ObjectId(req.params.id));
-        if ( index > -1) {
-          user.dogs.splice(index,1);
+        if (index > -1) {
+          user.dogs.splice(index, 1);
           user.save(function (err) {
             if (err) {
-              console.log('trying to user after removing dog '+req.params.id+' '+err);  // handle errors!
+              console.log('trying to user after removing dog ' + req.params.id + ' ' + err);  // handle errors!
             }
           });
-        }       
+        }
 
         Model.Dog.findByIdAndRemove(mongoose.Types.ObjectId(req.params.id), {}, function (err, dog) {
           if (err) {
@@ -165,8 +155,8 @@ router.delete('/api/v1/dogs/:id', function (req, res) {
           }
         });
       }
+    });
   });
-}); 
 });
 
 module.exports = router;

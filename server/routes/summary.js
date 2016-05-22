@@ -6,11 +6,9 @@ var mongoose = require('mongoose');
 
 
 
-router.get('/api/v1/summary', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/summary', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }).populate('dogs').exec(function (err, user) {
@@ -74,11 +72,9 @@ router.get('/api/v1/summary', function (req, res) {
 });
 
 
-router.get('/api/v1/summary/:dog/:difficulty', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/summary/:dog/:difficulty', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }).populate('dogs').exec(function (err, user) {

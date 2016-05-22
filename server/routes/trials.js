@@ -5,10 +5,8 @@ var status = require('http-status');
 var mongoose = require('mongoose');
 
 router.post('/api/v1/trials', function (req, res, next) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }, function (err, user) {
@@ -36,11 +34,9 @@ router.post('/api/v1/trials', function (req, res, next) {
   });
 });
 
-router.get('/api/v1/trials', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/trials', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.User.findOne({ 'data.oauth': req.user.data.oauth }).exec(function (err, user) {
@@ -54,27 +50,25 @@ router.get('/api/v1/trials', function (req, res) {
       else {
         // we have the dogs, now find the trials that go with the dogs
         Model.Trial.where('dog').in(user.dogs).populate('dog').exec(function (err, trials) {
-        if (err) {
-          console.log(err);  // handle errors!
-          return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
-        }
-        else if (user === null) {
-          return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
-        }
+          if (err) {
+            console.log(err);  // handle errors!
+            return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+          }
+          else if (user === null) {
+            return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
+          }
 
-        return res.json(trials);
-      });
+          return res.json(trials);
+        });
 
       }
     });
   });
 });
 
-router.get('/api/v1/trials/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.get('/api/v1/trials/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.Trial.findById(mongoose.Types.ObjectId(req.params.id), function (err, trial) {
@@ -93,11 +87,9 @@ router.get('/api/v1/trials/:id', function (req, res) {
   });
 });
 
-router.post('/api/v1/trials/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.post('/api/v1/trials/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.Trial.findById(mongoose.Types.ObjectId(req.params.id), function (err, trial) {
@@ -109,10 +101,10 @@ router.post('/api/v1/trials/:id', function (req, res) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'trial unknown ' + req.params.id });
       }
       else {
-        Model.Trial.schema.eachPath(function(path) {
-            if (  req.body.hasOwnProperty(path) ) {
-              trial[path]=req.body[path];
-            } 
+        Model.Trial.schema.eachPath(function (path) {
+          if (req.body.hasOwnProperty(path)) {
+            trial[path] = req.body[path];
+          }
         });
 
         trial.save(function (err) {
@@ -129,11 +121,9 @@ router.post('/api/v1/trials/:id', function (req, res) {
 });
 
 
-router.delete('/api/v1/trials/:id', function (req, res) {
-  if (!req.user) {
-    return res.
-      status(status.UNAUTHORIZED).
-      json({ error: 'Not logged in' });
+router.delete('/api/v1/trials/:id', function (req, res, next) {
+  if ( typeof req.user === "undefined") {
+    return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
     Model.Trial.findByIdAndRemove(mongoose.Types.ObjectId(req.params.id), {}, function (err, trial) {
