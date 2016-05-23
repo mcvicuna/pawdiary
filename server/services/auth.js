@@ -70,7 +70,7 @@ function setupAuth(Model, Config, app, wagner) {
 
   // Express middlewares
   app.use(require('express-session')({
-    secret: 'this is a secret'
+    secret: Config.sessionSecret
   }));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -82,7 +82,7 @@ function setupAuth(Model, Config, app, wagner) {
   app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { failureRedirect: '/fail' }),
     function(req, res) {
-      res.redirect('/');
+      res.redirect('/#/');
     });
 }
 

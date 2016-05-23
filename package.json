@@ -17,6 +17,7 @@
     "angular-messages": "^1.5.5",
     "angular-mocks": "^1.5.5",
     "angular-route": "^1.5.5",
+    "angular-resource": "^1.5.5",
     "angular-sanitize": "^1.5.5",
     "body-parser": "~1.13.2",
     "browserify": "10.2.3",
@@ -40,6 +41,7 @@
     "wagner-core": "~0.2.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jshint": "latest",
     "mocha": "latest"
   }
