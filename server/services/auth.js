@@ -19,7 +19,7 @@ function setupAuth(Model, Config, app, wagner) {
 
       clientID: Config.facebookClientId,
       clientSecret: Config.facebookClientSecret,
-      callbackURL: 'http://localhost:3000/auth/facebook/callback',
+      callbackURL: Config.facebookCallback,
       // Necessary for new version of Facebook graph API
       profileFields: ['id', 'emails', 'name']
     },
