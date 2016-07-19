@@ -15,17 +15,7 @@ function setupAuth(Model, Config, app, wagner) {
   });
 
   // Facebook-specific
-  passport.use(new FacebookStrategy(
-    {
-
-  function facebook_login(accessToken, refreshToken, profile, done) {
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
-      callbackURL: Config.facebookCallback,
-      // Necessary for new version of Facebook graph API
-      profileFields: ['id', 'emails', 'name']
-    },
-    function(accessToken, refreshToken, profile, done) {
+   function facebook_login(accessToken, refreshToken, profile, done) {
       if (!profile.emails || !profile.emails.length) {
         return done('No emails associated with this account!');
       }
@@ -70,26 +60,25 @@ function setupAuth(Model, Config, app, wagner) {
       });
   }
 
-  // Facebook-specific
   passport.use(new FacebookStrategy(
     {
-
       clientID: Config.facebookClientId,
       clientSecret: Config.facebookClientSecret,
-      callbackURL: 'http://localhost:3000/auth/facebook/callback',
+      callbackURL: Config.facebookCallback,
+      enableProof: true,
       // Necessary for new version of Facebook graph API
       profileFields: ['id', 'emails', 'name']
-    },facebook_login));
+    },
+    facebook_login
+  ));
 
-    // for token based authorizing
-    passport.use(new FacebookTokenStrategy({
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
+  // for token based authorizing
+  passport.use(new FacebookTokenStrategy({
+    clientID: Config.facebookClientId,
+    clientSecret: Config.facebookClientSecret,
     },
     facebook_login 
-    ));    
-        });
-    }));
+  ));    
 
   // Express middlewares
   app.use(require('express-session')({
