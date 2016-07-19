@@ -2,9 +2,10 @@ var fs = require('fs');
 
 module.exports = function(wagner,app) {
   wagner.factory('Config', function() {
+    rootDir = __dirname
     configFile = app.get('env') === 'development' ?
-      './server/config/dev/config.json'
-      : './server/config/prod/config.json';
-    return JSON.parse(fs.readFileSync(configFile).toString());
+      '/config/dev/config.json'
+      : '/config/prod/config.json';
+    return JSON.parse(fs.readFileSync(rootDir+configFile).toString());
   });
 };
