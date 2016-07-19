@@ -14,70 +14,71 @@ function setupAuth(Model, Config, app, wagner) {
       exec(done);
   });
 
+  // Facebook-specific
 
   function facebook_login(accessToken, refreshToken, profile, done) {
-      if (!profile.emails || !profile.emails.length) {
-        return done('No emails associated with this account!');
+    if (!profile.emails || !profile.emails.length) {
+      return done('No emails associated with this account!');
+    }
+
+    Model.User.findOne({ 'data.oauth': profile.id }, function(err, user) {
+      if(err) {
+        console.log(err);  // handle errors!
       }
-
-      Model.User.findOne({ 'data.oauth': profile.id }, function(err, user) {
-        if(err) {
-          console.log(err);  // handle errors!
+      else if (user !== null) {
+        Model.User.findOneAndUpdate(
+          { 'data.oauth': profile.id },
+          {
+            $set: {
+              'logOn': Date.now(),
+              'profile.username': profile.emails[0].value,
+              'profile.picture': 'http://graph.facebook.com/' +
+                profile.id.toString() + '/picture?type=large'
+            }
+          },
+          { 'new': true, upsert: true, runValidators: true },
+          function(error, user) {
+            done(error, user);
+          });
+      } else {
+        user = new Model.User({
+          'logOn': Date.now(),
+          'createdOn': Date.now(),
+          'data.oauth': profile.id,
+          'profile.username': profile.emails[0].value,
+          'profile.picture': 'http://graph.facebook.com/' +
+                profile.id.toString() + '/picture?type=large'
+            });
+        user.save(function(err) {
+            if(err) {
+              console.log(err);  // handle errors!
+            } else {
+              console.log("saving user ...");
+              done(null, user);
+            }
+          });
         }
-        else if (user !== null) {
-          Model.User.findOneAndUpdate(
-            { 'data.oauth': profile.id },
-            {
-              $set: {
-                'logOn': Date.now(),
-                'profile.username': profile.emails[0].value,
-                'profile.picture': 'http://graph.facebook.com/' +
-                  profile.id.toString() + '/picture?type=large'
-              }
-            },
-            { 'new': true, upsert: true, runValidators: true },
-            function(error, user) {
-              done(error, user);
-            });
-        } else {
-          user = new Model.User({
-            'logOn': Date.now(),
-            'createdOn': Date.now(),
-            'data.oauth': profile.id,
-            'profile.username': profile.emails[0].value,
-            'profile.picture': 'http://graph.facebook.com/' +
-                  profile.id.toString() + '/picture?type=large'
-              });
-          user.save(function(err) {
-              if(err) {
-                console.log(err);  // handle errors!
-              } else {
-                console.log("saving user ...");
-                done(null, user);
-              }
-            });
-          }
-      });
+    });    
   }
-
-  // Facebook-specific
   passport.use(new FacebookStrategy(
     {
-
       clientID: Config.facebookClientId,
       clientSecret: Config.facebookClientSecret,
-      callbackURL: 'http://localhost:3000/auth/facebook/callback',
+      callbackURL: Config.facebookCallback,
+      enableProof: true,
       // Necessary for new version of Facebook graph API
       profileFields: ['id', 'emails', 'name']
-    },facebook_login));
-
-    // for token based authorizing
-    passport.use(new FacebookTokenStrategy({
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
+    },
+    facebook_login     
+  ));
+  // for token based authorizing
+  passport.use(new FacebookTokenStrategy({
+    clientID: Config.facebookClientId,
+    clientSecret: Config.facebookClientSecret,
+    enableProof: true
     },
     facebook_login 
-    ));    
+  ));
 
   // Express middlewares
   app.use(require('express-session')({
