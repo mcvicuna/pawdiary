@@ -4,14 +4,13 @@ var fs = require('fs');
 var status = require('http-status');
 var wagner = require('wagner-core');
 
-var app;
-var server;
 before(function () {
-    server = require('../server/bin/www');
+    exports.server = require('../server/bin/www');
+    exports.app = exports.server.app;
     console.log("starting server ");
 });
 
 after(function () {
-    server.close();
+    exports.server.close();
     console.log("stopping server ");
 });

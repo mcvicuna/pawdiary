@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+exports.app = require(__dirname+'/../app');
 var debug = require('debug')('pawdiary:server');
 var http = require('http');
 
@@ -13,13 +13,15 @@ var http = require('http');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+exports.app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = http.createServer(exports.app);
+
+console.log(this.server)
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -85,4 +87,8 @@ function onListening() {
   var bind = typeof addr === 'string' ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+exports.close = function (callback) {
+  server.close(callback)
 }

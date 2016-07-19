@@ -16,8 +16,8 @@
     "angular-material": "^1.0.8",
     "angular-messages": "^1.5.5",
     "angular-mocks": "^1.5.5",
-    "angular-route": "^1.5.5",
     "angular-resource": "^1.5.5",
+    "angular-route": "^1.5.5",
     "angular-sanitize": "^1.5.5",
     "body-parser": "~1.13.2",
     "browserify": "10.2.3",
@@ -36,13 +36,18 @@
     "morgan": "~1.6.1",
     "passport": "~0.2.2",
     "passport-facebook": "~2.0.0",
+    "passport-facebook-token": "^3.3.0",
     "serve-favicon": "~2.3.0",
     "underscore": "1.5.2",
     "wagner-core": "~0.2.0"
   },
   "devDependencies": {
+    "fb": "^1.1.1",
     "gulp": "^3.9.1",
     "jshint": "latest",
-    "mocha": "latest"
+    "mocha": "latest",
+    "superagent": "latest",
+    "supertest": "latest",
+    "zombie": "^4.2.1"
   }
 }

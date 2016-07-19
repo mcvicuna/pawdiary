@@ -1,6 +1,7 @@
 function setupAuth(Model, Config, app, wagner) {
   var passport = require('passport');
   var FacebookStrategy = require('passport-facebook').Strategy;
+  var FacebookTokenStrategy = require('passport-facebook-token');
 
   // High level serialize/de-serialize configuration for passport
   passport.serializeUser(function(user, done) {
@@ -13,17 +14,8 @@ function setupAuth(Model, Config, app, wagner) {
       exec(done);
   });
 
-  // Facebook-specific
-  passport.use(new FacebookStrategy(
-    {
 
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
-      callbackURL: 'http://localhost:3000/auth/facebook/callback',
-      // Necessary for new version of Facebook graph API
-      profileFields: ['id', 'emails', 'name']
-    },
-    function(accessToken, refreshToken, profile, done) {
+  function facebook_login(accessToken, refreshToken, profile, done) {
       if (!profile.emails || !profile.emails.length) {
         return done('No emails associated with this account!');
       }
@@ -65,8 +57,27 @@ function setupAuth(Model, Config, app, wagner) {
               }
             });
           }
-        });
-    }));
+      });
+  }
+
+  // Facebook-specific
+  passport.use(new FacebookStrategy(
+    {
+
+      clientID: Config.facebookClientId,
+      clientSecret: Config.facebookClientSecret,
+      callbackURL: 'http://localhost:3000/auth/facebook/callback',
+      // Necessary for new version of Facebook graph API
+      profileFields: ['id', 'emails', 'name']
+    },facebook_login));
+
+    // for token based authorizing
+    passport.use(new FacebookTokenStrategy({
+      clientID: Config.facebookClientId,
+      clientSecret: Config.facebookClientSecret,
+    },
+    facebook_login 
+    ));    
 
   // Express middlewares
   app.use(require('express-session')({
@@ -82,8 +93,25 @@ function setupAuth(Model, Config, app, wagner) {
   app.get('/auth/facebook/callback',
     passport.authenticate('facebook', { failureRedirect: '/fail' }),
     function(req, res) {
-      res.redirect('/#/');
+      if ( req.user ) {
+        res.redirect('/#/');
+      }
+      else {
+        res.send(401);
+      }
     });
+
+  app.get('/auth/facebook/token',
+    passport.authenticate('facebook-token'),
+    function (req, res) {
+      if ( req.user ) {
+        res.redirect('/#/');
+      }
+      else {
+        res.send(401);
+      }
+    }
+  );    
 }
 
 module.exports = setupAuth;
