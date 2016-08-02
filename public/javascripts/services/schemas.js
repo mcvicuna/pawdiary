@@ -1,3 +1,10 @@
+var Joi = require('joi');
+
+
 exports.$schemas = function() {
-  return require('../../../common/schemas/index.js');
+  schemas = require('../../../common/schemas/index.js');
+  Object.keys(schemas).forEach(function(key) {
+          schemas[key] = Joi.object(schemas[key]);
+  });
+  return schemas;
 }; 

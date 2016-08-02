@@ -3,14 +3,15 @@ var router = express.Router();
 var wagner = require('wagner-core');
 var status = require('http-status');
 var mongoose = require('mongoose');
+var Joi = require('joi');
+var UUID = require('uuid');
 
 router.post('/api/v1/dogs', function (req, res, next) {
   if ( typeof req.user === "undefined") {
     return next({ status: status.UNAUTHORIZED });
   }
-  wagner.invoke(function (Model) {
-
-    Model.User.findOne({ 'data.oauth': req.user.data.oauth }, function (err, user) {
+  wagner.invoke(function (Model,Schema) {
+    Model.Users.get({ id : req.user.id }, function (err, user) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -19,20 +20,37 @@ router.post('/api/v1/dogs', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
-        var dog = new Model.Dog(req.body);
+        filtered_dog = {};
+        Object.keys(Schema.Dog).forEach(function(key) {
+          if ( key in req.body)
+            filtered_dog[key] = req.body[key]; 
+        });
 
-        dog.save(function (err) {
+        filtered_dog.owner = req.user.id;
+        valid = Joi.validate(filtered_dog,Schema.Dog);
+        if (valid.error) {
+            console.log(valid.error);  // handle errors!
+            return res.status(status.INTERNAL_SERVER_ERROR).json({ error: valid.error });
+        }
+
+        var dog = new Model.Dog(filtered_dog);
+        if(!("dogs" in user.attrs)) {
+          user.attrs.dogs = [];
+        }
+        user.attrs.dogs.push(dog.get('id'));
+        user.save(function (err) {
           if (err) {
             console.log(err);  // handle errors!
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
           }
-          user.dogs.push(dog);
-          user.save(function (err) {
+        
+
+            dog.save(function (err) {
             if (err) {
               console.log(err);  // handle errors!
               return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
             }
-
+         
             return res.json(dog);
           });
         });
@@ -46,7 +64,7 @@ router.get('/api/v1/dogs', function (req, res, next) {
     return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
-    Model.User.findOne({ 'data.oauth': req.user.data.oauth }).populate('dogs').exec(function (err, user) {
+    Model.Users.get({ id : req.user.id }, function (err, user) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -55,9 +73,23 @@ router.get('/api/v1/dogs', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
+        if("dogs" in user.attrs) {
+          Model.Dog.getItems(req.user.dogs,function(err, dogs) {
+            if (err) {
+              console.log(err);  // handle errors!
+              return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
+            }
 
-        return res.json(user.dogs);
+            results = dogs.map(function(dog) {
+              return dog.attrs;
+            });        
 
+            return res.json(results);
+          });
+        }
+        else {
+          return res.json([]);
+        }
       }
     });
   });
@@ -68,7 +100,7 @@ router.get('/api/v1/dogs/:id', function (req, res, next) {
     return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
-    Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
+    Model.Dog.get((req.params.id), function (err, dog) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -77,7 +109,7 @@ router.get('/api/v1/dogs/:id', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
       } {
 
-        return res.json({ dog: dog });
+        return res.json({ dog: dog.attrs });
 
       }
     });
@@ -89,7 +121,7 @@ router.post('/api/v1/dogs/:id', function (req, res, next) {
     return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
-    Model.Dog.findById(mongoose.Types.ObjectId(req.params.id), function (err, dog) {
+    Model.Dog.get((req.params.id), function (err, dog) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -98,13 +130,9 @@ router.post('/api/v1/dogs/:id', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
       }
       else {
-        Model.Dog.schema.eachPath(function (path) {
-          if (req.body.hasOwnProperty(path)) {
-            dog[path] = req.body[path];
-          }
-        });
-
-        dog.save(function (err) {
+        if ( dog.attrs.owner != req.user.id ) 
+          return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog not owned ' + req.user.id });
+        Model.Dog.update(req.body, function (err) {
           if (err) {
             console.log(err);  // handle errors!
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -123,7 +151,7 @@ router.delete('/api/v1/dogs/:id', function (req, res, next) {
     return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
-    Model.User.findOne({ 'data.oauth': req.user.data.oauth }).exec(function (err, user) {
+    Model.Users.get({ id : req.user.id }, function (err, user) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -132,9 +160,9 @@ router.delete('/api/v1/dogs/:id', function (req, res, next) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       }
       else {
-        var index = user.dogs.indexOf(mongoose.Types.ObjectId(req.params.id));
+        var index = user.attrs.dogs.indexOf(req.params.id);
         if (index > -1) {
-          user.dogs.splice(index, 1);
+          user.attrs.dogs.splice(index, 1);
           user.save(function (err) {
             if (err) {
               console.log('trying to user after removing dog ' + req.params.id + ' ' + err);  // handle errors!
@@ -142,7 +170,7 @@ router.delete('/api/v1/dogs/:id', function (req, res, next) {
           });
         }
 
-        Model.Dog.findByIdAndRemove(mongoose.Types.ObjectId(req.params.id), {}, function (err, dog) {
+        Model.Dog.destroy(req.params.id, { ReturnValues: "ALL_OLD", expected: {owner: req.user.id}}, function (err, dog) {
           if (err) {
             console.log(err);  // handle errors!
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -151,7 +179,7 @@ router.delete('/api/v1/dogs/:id', function (req, res, next) {
             return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'dog unknown ' + req.params.id });
           }
           else {
-            res.json(dog);
+            res.json(dog.attrs);
           }
         });
       }

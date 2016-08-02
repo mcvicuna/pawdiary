@@ -1,5 +1,6 @@
-var mongoose = require('mongoose');
+var Joi = require('joi');
 var TrialController = require('./trial');
+var UUID = require('uuid');
 
 var modeEnum = {
   DELETE: -1,
@@ -46,36 +47,43 @@ exports.TrialsController = function ($scope, $rootScope, $user, $log, $mdDialog,
 
   $scope.refresh = function () {
     $trials.query(function (trials) {
-      trials.forEach(function (trial) {
-        trial.dogName = trial.dog.name;
+       $dogs.query(function (dogs) {
+          trials.forEach(function(trial) {
+             trial.dog = dogs.find(function(dog) {
+                  return dog.id === trial.dog;
+             });
+             trial.dogName = trial.dog.name; 
+          });
+          $scope.dogs = dogs;
+          $scope.trials = trials;
       });
-      $scope.trials = trials;
     });
   };
 
-  $dogs.query(function (dogs) {
-    $scope.dogs = dogs;
-  });
+ 
 
   $scope.refresh();
 
   function trialSave(answer) {
     $log.log('saving trial with ' + answer.mode);
     if (answer.mode == modeEnum.ADD) {
-      newTrial = new $trials(new mongoose.Document(answer.trial, $schemas.Trial));
-      delete newTrial.id;
-      newTrial.createdOn = Date.now();
-      newTrial.$save(function () {
-        $scope.refresh();
+      answer.trial.id = UUID.v4();
+      Joi.validate(answer.trial, $schemas.Trial, function(err, trial) {
+        if ( err )
+          throw err;
+        newTrial = new $trials(answer.trial);
+        newTrial.$save(function () {
+          $scope.refresh();
+        });
       });
     }
     else if (answer.mode == modeEnum.UPDATE) {
-      $trials.save({ id: answer.trial.id }, answer.trial, function () {
+      $trials.save({ dog:answer.trial.dog, id: answer.trial.id }, answer.trial, function () {
         $scope.refresh();
       });
     }
     else if (answer.mode == modeEnum.DELETE) {
-      $trials.remove({ id: answer.trial.id, }, answer.trial, function () {
+      $trials.remove({ dog:answer.trial.dog, id: answer.trial.id, }, function () {
         $scope.refresh();
       });
     }
@@ -97,7 +105,7 @@ exports.TrialsController = function ($scope, $rootScope, $user, $log, $mdDialog,
 
 
   $scope.newTrial = function () {
-    showTrialDialog(null, mongoose.Document({}, $schemas.Trial), modeEnum.ADD); 1;
+    showTrialDialog(null, $schemas.Trial.default().validate({},{abortEarly : false}).value, modeEnum.ADD); 1;
   };
 
   $scope.onEdit = function (trial) {

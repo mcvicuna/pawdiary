@@ -9,7 +9,7 @@ router.get('/api/v1/profile', function (req, res, next) {
     return next({ status: status.UNAUTHORIZED });
   }
   wagner.invoke(function (Model) {
-    Model.User.findOne({ 'data.oauth': req.user.data.oauth }, function (err, user) {
+    Model.Users.get({ id : req.user.id }, function (err, user) {
       if (err) {
         console.log(err);  // handle errors!
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: err });
@@ -17,7 +17,7 @@ router.get('/api/v1/profile', function (req, res, next) {
       else if (user === null) {
         return res.status(status.INTERNAL_SERVER_ERROR).json({ error: 'user unknown ' + req.user });
       } {
-        return res.json({ user: req.user });
+        return res.json({ user: {id : req.user.id} });
       }
     });
   });

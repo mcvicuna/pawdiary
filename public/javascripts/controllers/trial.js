@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-
 exports.TrialController = function ($scope, $rootScope, $mdDialog, $log, $dogs, $trials, trial, mode) {
   $scope.trial = trial;
   $scope.selectedDog = trial.dog;
@@ -19,13 +17,16 @@ exports.TrialController = function ($scope, $rootScope, $mdDialog, $log, $dogs, 
   $scope.onSave = function () {
     $scope.trialForm.$setSubmitted();
     if ($scope.trialForm.$valid) {
-      $scope.trial.dog = $scope.selectedDog;
+      $scope.trial.dog = $scope.selectedDog.id;
+      $scope.trial.date = new Date($scope.trial.date).getTime();
       $log.log('saving trialForm with mode ' + mode);
       $mdDialog.hide({ trial: $scope.trial, mode: mode });
     }
   };
 
   $scope.onDelete = function () {
+    $scope.trial.dog = $scope.selectedDog.id;
+    $scope.trial.date = new Date($scope.trial.date).getTime();
     $mdDialog.hide({ trial: $scope.trial, mode: -1 });
   };
 
@@ -34,7 +35,7 @@ exports.TrialController = function ($scope, $rootScope, $mdDialog, $log, $dogs, 
   };
   
   $scope.closeDialog = function () {
-    $mdDialog.cancel()
+    $mdDialog.cancel();
   };
   
   setTimeout(function () {
