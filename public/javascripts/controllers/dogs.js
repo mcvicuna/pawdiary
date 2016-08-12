@@ -1,5 +1,6 @@
-var mongoose = require('mongoose');
+var Joi = require('joi');
 var DogController = require('./dog');
+var UUID = require('uuid');
 
 var modeEnum = {
   DELETE: -1,
@@ -53,11 +54,14 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
   function dogSave(answer) {
     $log.log('saving dog with ' + answer.mode);
     if (answer.mode == modeEnum.ADD ) {
-      newDog = new $dogs(new mongoose.Document(answer.dog, $schemas.Dog));
-      delete newDog.id;
-      newDog.createdOn = Date.now();
-      newDog.$save(function () {
-        $scope.refresh();
+      answer.dog.id = UUID.v4();
+     Joi.validate(answer.dog, $schemas.Dog, function(err, dog) {
+       if ( err )
+         throw err;
+       new_dog = new $dogs(dog);
+       new_dog.$save(function () {
+          $scope.refresh();
+       });
       });
     }
     else if (answer.mode == modeEnum.UPDATE ) {
@@ -79,7 +83,7 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
       parent: angular.element(document.body),
       targetEvent: $event,
       clickOutsideToClose: true,
-      fullscreen: true,
+      fullscreen: true, 
       locals: { dog: dog, mode: mode }
     })
       .then(dogSave, function () { });
@@ -88,8 +92,8 @@ exports.DogsController = function ($scope, $rootScope, $user, $log, $mdDialog, $
 
 
   $scope.newDog = function () {
-    showDogDialog(null, new mongoose.Document({}, $schemas.Dog), modeEnum.ADD);
-    
+    dog = $schemas.Dog.default().validate({owner : $user.user.id },{abortEarly : false}).value;
+    showDogDialog(null, dog, modeEnum.ADD);    
   };
 
   $scope.onEdit = function ($event, dog) {

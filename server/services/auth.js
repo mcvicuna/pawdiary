@@ -5,91 +5,87 @@ function setupAuth(Model, Config, app, wagner) {
 
   // High level serialize/de-serialize configuration for passport
   passport.serializeUser(function(user, done) {
-    done(null, user._id);
+    done(null, user.id);
   });
 
   passport.deserializeUser(function(id, done) {
-    Model.User.
-      findOne({ _id : id }).
-      exec(done);
+    Model.Users.get({ id : id }, function(err, user) {
+      if ( err ) {
+        done(err,null);      
+      }
+      else {
+        done(null,user.attrs);
+      }
+    });
   });
 
   // Facebook-specific
-  passport.use(new FacebookStrategy(
-    {
-
-  function facebook_login(accessToken, refreshToken, profile, done) {
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
-      callbackURL: Config.facebookCallback,
-      // Necessary for new version of Facebook graph API
-      profileFields: ['id', 'emails', 'name']
-    },
-    function(accessToken, refreshToken, profile, done) {
+   function facebook_login(accessToken, refreshToken, profile, done) {
       if (!profile.emails || !profile.emails.length) {
         return done('No emails associated with this account!');
       }
-
-      Model.User.findOne({ 'data.oauth': profile.id }, function(err, user) {
+      Model.Users.query(profile.id).usingIndex('fb_index').exec(function(err, user) {
         if(err) {
           console.log(err);  // handle errors!
+        } 
+        else if (user !== null  && user.Count > 1) {
+          return done('to many accounts associated with thie FB account');
         }
-        else if (user !== null) {
-          Model.User.findOneAndUpdate(
-            { 'data.oauth': profile.id },
+        else if (user !== null  && user.Count == 1) {
+          Model.Users.update(
             {
-              $set: {
-                'logOn': Date.now(),
-                'profile.username': profile.emails[0].value,
-                'profile.picture': 'http://graph.facebook.com/' +
+               id: user.Items[0].get('id'), 
+               fb_email: profile.emails[0].value,
+               fb_token: accessToken,
+               picture: 'http://graph.facebook.com/' +
                   profile.id.toString() + '/picture?type=large'
+            }, function(err, user) {
+              if(err) {
+                console.log(err);  // handle errors!
+              } else {
+                console.log('update account', user.get('fb_email'));
+                done(null, user.attrs);
               }
-            },
-            { 'new': true, upsert: true, runValidators: true },
-            function(error, user) {
-              done(error, user);
+               
             });
         } else {
-          user = new Model.User({
-            'logOn': Date.now(),
-            'createdOn': Date.now(),
-            'data.oauth': profile.id,
-            'profile.username': profile.emails[0].value,
-            'profile.picture': 'http://graph.facebook.com/' +
+          user = new Model.Users({
+            fb_id: profile.id,
+            email: profile.emails[0].value,
+            picture: 'http://graph.facebook.com/' +
                   profile.id.toString() + '/picture?type=large'
               });
           user.save(function(err) {
               if(err) {
                 console.log(err);  // handle errors!
               } else {
-                console.log("saving user ...");
-                done(null, user);
+                console.log("saving user ...", user.get('fb_email'));
+                done(null, user.attrs);
               }
             });
           }
       });
   }
 
-  // Facebook-specific
   passport.use(new FacebookStrategy(
     {
-
       clientID: Config.facebookClientId,
       clientSecret: Config.facebookClientSecret,
-      callbackURL: 'http://localhost:3000/auth/facebook/callback',
+      callbackURL: Config.facebookCallback,
+      enableProof: true,
       // Necessary for new version of Facebook graph API
       profileFields: ['id', 'emails', 'name']
-    },facebook_login));
+    },
+    facebook_login
+  ));
 
-    // for token based authorizing
-    passport.use(new FacebookTokenStrategy({
-      clientID: Config.facebookClientId,
-      clientSecret: Config.facebookClientSecret,
+  // for token based authorizing
+  passport.use(new FacebookTokenStrategy({
+    clientID: Config.facebookClientId,
+    clientSecret: Config.facebookClientSecret,
     },
     facebook_login 
-    ));    
-        });
-    }));
+  ));    
 
   // Express middlewares
   app.use(require('express-session')({

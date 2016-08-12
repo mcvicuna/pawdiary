@@ -1,20 +1,8 @@
-var mongoose = require('mongoose');
+var Joi = require('joi');
+var UUID = require('uuid');
 
-module.exports = new mongoose.Schema({
-    lastName: {
-      type: String,
-      required: true,
-      lowercase: true
-    },
-    firstName: {
-      type: String,
-      required: true,
-      lowercase: true
-    },
-  
-  createdOn: { type: Date, required: true },
-  logOn: { type: Date, required: true }
-});
-
-module.exports.set('toObject', { virtuals: true });
-module.exports.set('toJSON', { virtuals: true });
+module.exports = {
+  id : Joi.string().guid().default(UUID.v4()).required(),
+  first: Joi.string().alphanum().min(1).max(128).required(),
+  last: Joi.string().alphanum().min(1).max(128).required()
+};

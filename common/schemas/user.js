@@ -1,27 +1,22 @@
-var mongoose = require('mongoose');
+var Joi = require('joi');
+var UUID = require('uuid');
+
+module.exports = {
+    id : Joi.string().guid().default(UUID.v4()).required(),
+    email: Joi.string().email(),
+    picture : Joi.string().uri().default('/images/ic_insert_photo_black_48px.svg'),
+    fb_id : Joi.string(),
+    fb_token : Joi.string(),
+    fb_email : Joi.string().email(),
+    fb_name : Joi.string(),
+    gg_id : Joi.string(),
+    gg_token : Joi.string(),
+    gg_email : Joi.string().email(),
+    gg_name : Joi.string(),
+    dog_trial_limit : Joi.number().default(2).required(),    
+    friends : Joi.array().items(Joi.string().guid()).meta({dynamoType : 'SS'}),
+    dogs : Joi.array().items(Joi.string().guid()).meta({dynamoType : 'SS'}),
+  }; 
   
-  module.exports = new mongoose.Schema({
-    profile: {
-      username: {
-        type: String,
-        required: true,
-        lowercase: true
-      },
-     picture: {
-        type: String,
-       required: true
-      }
-    },
-    data: {
-      oauth: {
-        type: String,
-        required: true }
-    },
-    friends:[{type:mongoose.Schema.Types.ObjectId,ref: 'User'}],
-    dogs:[{type:mongoose.Schema.Types.ObjectId,ref: 'Dog'}],
-    createdOn: { type: Date, required: true },
-    logOn: { type: Date, required: true }
-  });
-  
-  module.exports.set('toObject', { virtuals: true });
-  module.exports.set('toJSON', { virtuals: true });
+  // module.exports.set('toObject', { virtuals: true });
+  // module.exports.set('toJSON', { virtuals: true });
