@@ -1,6 +1,6 @@
 {
   "name": "pawdiary",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "author": "mark vicuna <markcvicuna@gmail.com>",
   "description": "performance dog diary",
   "private": true,
@@ -45,5 +45,9 @@
     "gulp": "^3.9.1",
     "jshint": "latest",
     "mocha": "latest"
+  },
+  "engines" : {
+    "node" : "4.4.x",
+    "npm" : "2.15.x"
   }
 }
