@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 
 var routes = require('./routes/index');
@@ -20,6 +21,10 @@ var wagner = require('wagner-core');
 var dependencies = require('./dependencies')(wagner, app);
 var model = require('./schemas/model.js')(wagner);
 
+
+var app_info = process.env.VCAP_APPLICATION !== null ? JSON.parse(process.env.VCAP_APPLICATION) : JSON.parse('{ }');
+console.log('App Info: ' + JSON.stringify(app_info));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -29,12 +34,12 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(session({
   genid: function (req) {
     return require('crypto').randomBytes(48).toString('hex'); // use UUIDs for session IDs
   },
-  secret: wagner.get('Config').sessionSecret
+  secret: wagner.get('Config').sessionSecret,
+  store: new MongoStore({ mongooseConnection: wagner.get('db').connection })
 }));
 app.use(passport.initialize());
 app.use(passport.session());
